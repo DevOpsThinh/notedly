@@ -41,6 +41,7 @@ module.exports = {
       content: args.content,
       // Reference the author's mongo id
       author: mongoose.Types.ObjectId(user.id),
+      favoriteCount: 0
     });
   },
   deleteNote: async (parent, { id }, { models, user }) => {
@@ -87,7 +88,7 @@ module.exports = {
         },
       },
       {
-        new: true,
+        new: true
       }
     );
   },
@@ -166,7 +167,7 @@ module.exports = {
         },
         {
           // Set new to true to return the updated document
-          new: true,
+          new: true
         }
       );
     } else {
@@ -185,7 +186,7 @@ module.exports = {
           },
         },
         {
-          new: true,
+          new: true
         }
       );
     }

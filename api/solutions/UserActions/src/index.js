@@ -41,7 +41,7 @@ const app = express();
 db.connect(DB_HOST);
 
 ///------------------------------------------------------------///
-///     Integrate Apollo Server to server our graphql api     ///                        ///
+///     Integrate Apollo Server to server our graphql api     ///  
 ///----------------------------------------------------------///
 
 /**

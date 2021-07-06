@@ -41,6 +41,7 @@ module.exports = {
       content: args.content,
       // Reference the author's mongo id
       author: mongoose.Types.ObjectId(user.id),
+      favoriteCount: 0
     });
   },
   deleteNote: async (parent, { id }, { models, user }) => {
@@ -87,9 +88,59 @@ module.exports = {
         },
       },
       {
-        new: true,
+        new: true
       }
     );
+  },
+  toggleFavorite: async (parent, { id }, { models, user }) => {
+    // If no user context is passed, throw authentication error
+    if (!user) {
+      throw new AuthenticationError();
+    }
+    //  Check to see if the user has already favorited the note
+    let noteCheck = await models.Note.findById(id);
+    const hasUser = noteCheck.favoritedBy.indexOf(user.id);
+
+    /**
+     * If the user exists in the list
+     * pull them from the list and reduce the favorite count by 1
+     */
+    if (hasUser >= 0) {
+      return await models.Note.findByIdAndUpdate(
+        id,
+        {
+          $pull: {
+            favoritedBy: mongoose.Types.ObjectId(user.id),
+          },
+          $inc: {
+            favoriteCount: -1,
+          },
+        },
+        {
+          // Set new to true to return the updated document
+          new: true
+        }
+      );
+    } else {
+      /**
+       * If the user doesn't exist in the list
+       * add them to the list and increment the favorite count by 1
+       */
+      return await models.Note.findByIdAndUpdate(
+        id,
+        {
+          $push: {
+            favoritedBy: mongoose.Types.ObjectId(user.id),
+          },
+          $inc: {
+            favoriteCount: 1,
+          },
+        },
+        {
+          new: true
+        }
+      );
+    }
   },
   signUp: async (parent, { username, email, password }, { models }) => {
     // Normalize email address
@@ -123,7 +174,7 @@ module.exports = {
     }
 
     const user = await models.User.findOne({
-      $or: [{ email }, { username }],
+      $or: [{ email }, { username }]
     });
 
     // If no user is found, throw an authentication error
@@ -139,55 +190,5 @@ module.exports = {
 
     // Create and return the JWT
     return jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-  },
-  toggleFavorite: async (parent, { id }, { models, user }) => {
-    // If no user context is passed, throw authentication error
-    if (!user) {
-      throw new AuthenticationError();
-    }
-    //  Check to see if the user has already favorited the note
-    let noteCheck = await models.Note.findById(id);
-    const hasUser = noteCheck.favoritedBy.indexOf(user.id);
-
-    /**
-     * If the user exists in the list
-     * pull them from the list and reduce the favorite count by 1
-     */
-    if (hasUser >= 0) {
-      return await models.Note.findByIdAndUpdate(
-        id,
-        {
-          $pull: {
-            favoritedBy: mongoose.Types.ObjectId(user.id),
-          },
-          $inc: {
-            favoriteCount: -1,
-          },
-        },
-        {
-          // Set new to true to return the updated document
-          new: true,
-        }
-      );
-    } else {
-      /**
-       * If the user doesn't exist in the list
-       * add them to the list and increment the favorite count by 1
-       */
-      return await models.Note.findByIdAndUpdate(
-        id,
-        {
-          $push: {
-            favoritedBy: mongoose.Types.ObjectId(user.id),
-          },
-          $inc: {
-            favoriteCount: 1,
-          },
-        },
-        {
-          new: true,
-        }
-      );
-    }
-  },
+  }
 };
