@@ -7,7 +7,7 @@ const models = require("../../api/solutions/Details/src/models");
  * Thu Duc College Of Technology
  * Created At: 3/ 7/ 2021
  * Updated At: 6/ 7/ 2021: Adding user queries: user's info, all users, current user;
- *                         Data limitations
+ *                         Data limitations (Pagination)
  *
  * Our queries resolver
  */

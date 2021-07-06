@@ -4,8 +4,9 @@
  * Student name: Nguyễn Trường Thịnh
  * Thu Duc College Of Technology
  * created At: 30/ 6/ 2021
- * Updated At: 3/ 7/ 2021: Adding the DB, CRUD pattern
- * Updated At: 4/ 7/ 2021: Adding Authentication module
+ * Updated At: 3/ 7/ 2021: Adding: the DB, CRUD pattern
+ * Updated At: 4/ 7/ 2021: Adding: Authentication module
+ * Updated At: 6/ 7/ 2021: Adding: Detail module (Pagination, Security - CORS ) 
 */
 
 ///------------------------------------------------------------///
@@ -60,7 +61,7 @@ app.use(cors());
  * Verify the validity of Token
  * Get the user info from a JWT
 */
-const getUser = token => {
+const getUser = (token) => {
     if (token) {
         try {
             // Return the user information from the token
