@@ -3,3 +3,4 @@
 # Student name: Nguyễn Trường Thịnh
 # Academic years: 2019 - 2022
 # IT Student: TDC College.
+# Our API After deploying at: https://graphqlapinodejs.herokuapp.com/api
